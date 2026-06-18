@@ -7,6 +7,7 @@ import 'package:reboot_launcher/src/pager/page_type.dart';
 import 'package:reboot_launcher/src/messenger/overlay.dart';
 import 'package:reboot_launcher/src/page/backend_page.dart';
 import 'package:reboot_launcher/src/page/browser_page.dart';
+import 'package:reboot_launcher/src/page/home_page.dart';
 import 'package:reboot_launcher/src/page/host_page.dart';
 import 'package:reboot_launcher/src/page/info_page.dart';
 import 'package:reboot_launcher/src/pager/abstract_page.dart';
@@ -18,6 +19,7 @@ final StreamController<void> pagesController = StreamController.broadcast();
 bool hitBack = false;
 
 final List<AbstractPage> pages = [
+  const HomePage(),
   const PlayPage(),
   const HostPage(),
   const BrowsePage(),
@@ -28,7 +30,7 @@ final List<AbstractPage> pages = [
 
 final List<GlobalKey<OverlayTargetState>> _flyoutPageControllers = List.generate(pages.length, (_) => GlobalKey());
 
-final RxInt pageIndex = RxInt(PageType.play.index);
+final RxInt pageIndex = RxInt(PageType.home.index);
 
 final HashMap<int, GlobalKey> _pageKeys = HashMap();
 

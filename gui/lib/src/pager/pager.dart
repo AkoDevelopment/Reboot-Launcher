@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
@@ -13,11 +12,9 @@ import 'package:reboot_launcher/src/controller/game_controller.dart';
 import 'package:reboot_launcher/src/controller/hosting_controller.dart';
 import 'package:reboot_launcher/src/controller/server_browser_controller.dart';
 import 'package:reboot_launcher/src/controller/settings_controller.dart';
-import 'package:reboot_launcher/src/pager/page_suggestion.dart';
 import 'package:reboot_launcher/src/util/matchmaker.dart';
 import 'package:reboot_launcher/src/util/os.dart';
 import 'package:reboot_launcher/src/util/translations.dart';
-import 'package:reboot_launcher/src/tile/profile_tile.dart';
 import 'package:reboot_launcher/src/messenger/dialog.dart';
 import 'package:reboot_launcher/src/messenger/info_bar.dart';
 import 'package:reboot_launcher/src/messenger/overlay.dart';
@@ -46,9 +43,6 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
   final ServerBrowserController _serverBrowserController = Get.find<ServerBrowserController>();
   final SettingsController _settingsController = Get.find<SettingsController>();
   final DllController _dllController = Get.find<DllController>();
-  final GlobalKey _searchKey = GlobalKey();
-  final FocusNode _searchFocusNode = FocusNode();
-  final TextEditingController _searchController = TextEditingController();
   final RxBool _focused = RxBool(true);
   final PageController _pageController = PageController(keepPage: true, initialPage: pageIndex.value);
 
@@ -172,8 +166,6 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
 
   @override
   void dispose() {
-    _searchFocusNode.dispose();
-    _searchController.dispose();
     pagesController.close();
     windowManager.removeListener(this);
     super.dispose();
@@ -432,39 +424,34 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
   );
   }
 
-  Widget _buildLateralView() => SizedBox(
-    width: 310,
+  Widget _buildLateralView() => Container(
+    width: 72,
+    color: FluentTheme.of(context).micaBackgroundColor.withOpacity(0.6),
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Obx(() {
-          pageIndex.value;
-          return ProfileWidget(
-              overlayKey: profileOverlayKey
-          );
-        }),
-        _autoSuggestBox,
-        const SizedBox(height: 12.0),
-        _buildNavigationTrail()
+        const SizedBox(height: 20.0),
+        const Text(
+          "OC",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        Expanded(child: _buildNavigationRail()),
       ],
     ),
   );
 
-  Widget _buildNavigationTrail() => Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 16.0
+  Widget _buildNavigationRail() => Scrollbar(
+      child: ListView.separated(
+        primary: true,
+        itemCount: pages.length,
+        separatorBuilder: (context, index) => const SizedBox(
+            height: 8.0
         ),
-        child: Scrollbar(
-          child: ListView.separated(
-            primary: true,
-            itemCount: pages.length,
-            separatorBuilder: (context, index) => const SizedBox(
-                height: 4.0
-            ),
-            itemBuilder: (context, index) => _buildNavigationItem(pages[index]),
-          ),
-        ),
+        itemBuilder: (context, index) => _buildNavigationItem(pages[index]),
       )
   );
 
@@ -472,103 +459,42 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
     final index = page.type.index;
     return OverlayTarget(
       key: getOverlayTargetKeyByPage(index),
-      child: HoverButton(
-        onPressed: () {
-          final lastPageIndex = pageIndex.value;
-          if(lastPageIndex != index) {
-            pageIndex.value = index;
-          }else if(currentPageStack.isNotEmpty) {
-            Navigator.of(pageKey.currentContext!).pop();
-            final element = currentPageStack.removeLast();
-            appStack.remove(element);
-            pagesController.add(null);
-          }
-        },
-        builder: (context, states) => Obx(() => Container(
-          height: 36,
-          decoration: BoxDecoration(
-              color: ButtonThemeData.uncheckedInputColor(
-                FluentTheme.of(context),
-                pageIndex.value == index ? {WidgetState.hovered} : states,
-                transparentWhenNone: true,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(6.0))
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 8.0
-            ),
-            child: Row(
-              children: [
-                SizedBox.square(
-                    dimension: 24,
-                    child: Image.asset(page.iconAsset)
+      child: Tooltip(
+        message: page.name,
+        child: HoverButton(
+          onPressed: () {
+            final lastPageIndex = pageIndex.value;
+            if(lastPageIndex != index) {
+              pageIndex.value = index;
+            }else if(currentPageStack.isNotEmpty) {
+              Navigator.of(pageKey.currentContext!).pop();
+              final element = currentPageStack.removeLast();
+              appStack.remove(element);
+              pagesController.add(null);
+            }
+          },
+          builder: (context, states) => Obx(() => Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+                color: ButtonThemeData.uncheckedInputColor(
+                  FluentTheme.of(context),
+                  pageIndex.value == index ? {WidgetState.hovered} : states,
+                  transparentWhenNone: true,
                 ),
-                const SizedBox(width: 12.0),
-                Text(page.name)
-              ],
+                borderRadius: BorderRadius.all(Radius.circular(8.0))
             ),
-          ),
-        )),
+            child: Center(
+              child: SizedBox.square(
+                  dimension: 22,
+                  child: Image.asset(page.iconAsset)
+              ),
+            ),
+          )),
+        ),
       ),
     );
   }
-
-  Widget get _autoSuggestBox => Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 8.0
-      ),
-      child: AutoSuggestBox<PageSuggestion>(
-        key: _searchKey,
-        controller: _searchController,
-        placeholder: translations.find,
-        focusNode: _searchFocusNode,
-        selectionHeightStyle: BoxHeightStyle.max,
-        itemBuilder: (context, item) => ListTile(
-            onPressed: () {
-              pageIndex.value = item.value!.pageIndex;
-              _searchController.clear();
-              _searchFocusNode.unfocus();
-            },
-            leading: item.child,
-            title: Text(
-                item.value!.name,
-                overflow: TextOverflow.clip,
-                maxLines: 1
-            )
-        ),
-        items: _suggestedItems,
-        autofocus: true,
-        trailingIcon: IgnorePointer(
-            child: IconButton(
-              onPressed: () {},
-              icon: Transform.flip(
-                  flipX: true,
-                  child: const Icon(FluentIcons.search)
-              ),
-            )
-        ),
-      )
-  );
-
-  List<AutoSuggestBoxItem<PageSuggestion>> get _suggestedItems => pages.mapMany((page) {
-    final pageIcon = SizedBox.square(
-        dimension: 24,
-        child: Image.asset(page.iconAsset)
-    );
-    final results = <AutoSuggestBoxItem<PageSuggestion>>[];
-    results.add(AutoSuggestBoxItem(
-        value: PageSuggestion(
-            name: page.name,
-            description: "",
-            pageIndex: page.index
-        ),
-        label: page.name,
-        child: pageIcon
-    ));
-    return results;
-  }).toList();
 }
 
 class _NestedPageObserver extends NavigatorObserver {

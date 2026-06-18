@@ -32,3 +32,6 @@ const String kEacExe = "FortniteClient-Win64-Shipping_EAC.exe";
 const String kCrashReportExe = "CrashReportClient.exe";
 const String kGFSDKAftermathLibDll = "GFSDK_Aftermath_Lib.dll";
 final Version kMaxAllowedVersion = Version.parse("30.10");
+// Project Ocean only supports this exact build, since that's the only one our backend's
+// content/cosmetics/shop are built against.
+const String kAllowedBuildIdentifier = "8.51-CL-6165369";

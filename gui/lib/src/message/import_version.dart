@@ -8,7 +8,6 @@ import 'package:reboot_launcher/src/controller/game_controller.dart';
 import 'package:reboot_launcher/src/util/translations.dart';
 import 'package:reboot_launcher/src/button/file_selector.dart';
 import 'package:reboot_launcher/src/messenger/dialog.dart';
-import 'package:version/version.dart';
 
 class ImportVersionDialog extends StatefulWidget {
   final GameVersion? version;
@@ -165,13 +164,9 @@ class _ImportVersionDialogState extends State<ImportVersionDialog> {
     await patchHeadless(shippingExes.first);
 
     final gameVersion = await extractGameVersion(directory);
-    try {
-      if(Version.parse(gameVersion) >= kMaxAllowedVersion) {
-        _validator.value = _ImportState.unsupportedVersionError;
-        return;
-      }
-    }catch(_) {
-      
+    if(!gameVersion.contains(kAllowedBuildIdentifier)) {
+      _validator.value = _ImportState.unsupportedVersionError;
+      return;
     }
 
     if(widget.version == null) {
