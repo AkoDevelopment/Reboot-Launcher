@@ -140,7 +140,7 @@ Future<void> _startApp() async {
               }
             }
             await windowManager.setPreventClose(true);
-            await windowManager.setResizable(true);
+            await windowManager.setResizable(false);
             await windowManager.setTitleBarStyle(
                 TitleBarStyle.hidden,
                 windowButtonVisibility: false

@@ -54,7 +54,7 @@ class _WebAppShellState extends State<WebAppShell> {
       await File("${webUiDir.path}\\$fileName").writeAsBytes(
           bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
     }
-    for (final fileName in const ["ocean.ico", "user.png", "play.png", "info.png"]) {
+    for (final fileName in const ["ocean.ico", "user.png"]) {
       final bytes = await rootBundle.load("web_ui/assets/$fileName");
       await File("${webUiAssetsDir.path}\\$fileName").writeAsBytes(
           bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
