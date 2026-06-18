@@ -97,7 +97,10 @@ class _WebAppShellState extends State<WebAppShell> {
       (function() {
         const statusState = document.querySelector(".status-state");
         const statusDot = document.querySelector(".status-dot");
-        if (statusState) statusState.textContent = ${jsonEncode(online ? "ONLINE" : "OFFLINE")};
+        if (statusState) {
+          statusState.textContent = ${jsonEncode(online ? "ONLINE" : "OFFLINE")};
+          statusState.classList.toggle("online", ${online});
+        }
         if (statusDot) statusDot.classList.toggle("online", ${online});
 
         const heroActions = document.getElementById("hero-actions");
@@ -130,7 +133,7 @@ class _WebAppShellState extends State<WebAppShell> {
   @override
   Widget build(BuildContext context) => Stack(
         children: [
-          if (_ready) Webview(_controller),
+          if (_ready) Positioned.fill(child: Webview(_controller)),
           // Mounted off-screen so the existing LaunchButton/GameController
           // logic can be triggered via _launchKey without duplicating it.
           Positioned(
