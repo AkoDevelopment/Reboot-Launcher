@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:reboot_launcher/src/controller/auth_controller.dart';
 import 'package:reboot_launcher/src/controller/backend_controller.dart';
+import 'package:reboot_launcher/src/controller/game_controller.dart';
 import 'package:reboot_launcher/src/messenger/dialog.dart';
 
 class LoginDialog extends StatefulWidget {
@@ -14,6 +15,7 @@ class LoginDialog extends StatefulWidget {
 class _LoginDialogState extends State<LoginDialog> {
   final AuthController _authController = Get.find<AuthController>();
   final BackendController _backendController = Get.find<BackendController>();
+  final GameController _gameController = Get.find<GameController>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -129,6 +131,13 @@ class _LoginDialogState extends State<LoginDialog> {
       _state.value = _LoginState.error;
       return;
     }
+
+    // The actual Fortnite client launch (-AUTH_LOGIN/-AUTH_PASSWORD) uses
+    // these separate credentials, not the launcher login above. Since both
+    // hit the same backend account database, keep them in sync so Launch
+    // Fortnite works immediately after logging in here.
+    _gameController.username.text = _emailController.text.trim();
+    _gameController.password.text = _passwordController.text;
 
     _state.value = _LoginState.success;
   }
