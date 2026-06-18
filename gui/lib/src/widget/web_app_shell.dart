@@ -14,9 +14,9 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_windows/webview_windows.dart';
 import 'package:window_manager/window_manager.dart';
 
-// TODO: replace with Project Ocean's real Discord invite + issue tracker URLs.
-const String _kDiscordInviteUrl = "https://discord.gg/";
-const String _kReportBugUrl = "https://discord.gg/";
+const String _kDiscordInviteUrl = "https://discord.gg/projectocean";
+// No separate issue tracker yet, so bug reports also go to Discord.
+const String _kReportBugUrl = "https://discord.gg/projectocean";
 
 /// Renders the custom HTML/CSS UI (gui/web_ui) inside a WebView2 surface and
 /// bridges it to the native app: window controls, the real launch/import
