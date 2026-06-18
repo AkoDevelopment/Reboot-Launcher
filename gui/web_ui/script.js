@@ -45,6 +45,14 @@ document.getElementById("language-select")?.addEventListener("change", (event) =
 document.getElementById("theme-select")?.addEventListener("change", (event) => callNative("setTheme", event.target.value));
 document.getElementById("install-dir-btn")?.addEventListener("click", () => callNative("openInstallDir"));
 
+// webview_windows relays mouse wheel input to the embedded WebView2 surface
+// via a native bridge that doesn't always target the correct scrollable
+// element, so scroll the content area manually as a reliable fallback.
+const contentArea = document.querySelector(".content");
+contentArea?.addEventListener("wheel", (event) => {
+  contentArea.scrollTop += event.deltaY;
+}, { passive: true });
+
 // Sidebar page navigation
 const navIcons = document.querySelectorAll(".nav-icon[data-page]");
 navIcons.forEach((icon) => {

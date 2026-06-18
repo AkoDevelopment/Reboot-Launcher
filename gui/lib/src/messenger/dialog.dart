@@ -30,6 +30,64 @@ abstract class AbstractDialog extends StatelessWidget {
   Widget build(BuildContext context);
 }
 
+/// Dark navy background with a faint grid overlay and a blue glow, matching
+/// the web UI's hero banner styling.
+class GridDialogDecoration extends Decoration {
+  const GridDialogDecoration();
+
+  @override
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) => _GridDialogPainter();
+}
+
+class _GridDialogPainter extends BoxPainter {
+  static const double _gridSpacing = 22.0;
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    final size = configuration.size ?? Size.zero;
+    final rect = Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height);
+    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(8.0));
+
+    canvas.save();
+    canvas.clipRRect(rrect);
+
+    final backgroundPaint = Paint()
+      ..shader = const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF0A1B33), Color(0xFF0F2A4A)]
+      ).createShader(rect);
+    canvas.drawRect(rect, backgroundPaint);
+
+    final glowPaint = Paint()
+      ..shader = RadialGradient(
+          center: Alignment.centerRight,
+          radius: 0.9,
+          colors: [const Color(0x2E5096FF), const Color(0x005096FF)]
+      ).createShader(rect);
+    canvas.drawRect(rect, glowPaint);
+
+    final gridPaint = Paint()
+      ..color = const Color(0x0DFFFFFF)
+      ..strokeWidth = 1.0;
+
+    for (double x = rect.left; x < rect.right; x += _gridSpacing) {
+      canvas.drawLine(Offset(x, rect.top), Offset(x, rect.bottom), gridPaint);
+    }
+    for (double y = rect.top; y < rect.bottom; y += _gridSpacing) {
+      canvas.drawLine(Offset(rect.left, y), Offset(rect.right, y), gridPaint);
+    }
+
+    final borderPaint = Paint()
+      ..color = const Color(0xFF1C3A5E)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+    canvas.drawRRect(rrect.deflate(0.5), borderPaint);
+
+    canvas.restore();
+  }
+}
+
 class GenericDialog extends AbstractDialog {
   final Widget header;
   final List<DialogButton> buttons;
@@ -40,7 +98,8 @@ class GenericDialog extends AbstractDialog {
   @override
   Widget build(BuildContext context) => ContentDialog(
       style: ContentDialogThemeData(
-          padding: padding ?? const EdgeInsets.only(left: 20, right: 20, top: 15.0, bottom: 5.0)
+          padding: padding ?? const EdgeInsets.only(left: 20, right: 20, top: 15.0, bottom: 5.0),
+          decoration: const GridDialogDecoration()
       ),
       content: header,
       actions: buttons
