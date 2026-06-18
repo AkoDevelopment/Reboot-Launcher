@@ -9,6 +9,8 @@ import 'package:reboot_launcher/src/button/game_start_button.dart';
 import 'package:reboot_launcher/src/button/version_selector.dart';
 import 'package:reboot_launcher/src/controller/backend_controller.dart';
 import 'package:reboot_launcher/src/controller/game_controller.dart';
+import 'package:reboot_launcher/src/controller/hosting_controller.dart';
+import 'package:reboot_launcher/src/controller/server_browser_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_windows/webview_windows.dart';
@@ -34,6 +36,8 @@ class _WebAppShellState extends State<WebAppShell> {
   final GlobalKey<LaunchButtonState> _launchKey = GlobalKey();
   final GameController _gameController = Get.find<GameController>();
   final BackendController _backendController = Get.find<BackendController>();
+  final HostingController _hostingController = Get.find<HostingController>();
+  final ServerBrowserController _serverBrowserController = Get.find<ServerBrowserController>();
 
   StreamSubscription? _webMessageSubscription;
   Timer? _pushStateTimer;
@@ -83,7 +87,7 @@ class _WebAppShellState extends State<WebAppShell> {
             maximized ? windowManager.unmaximize() : windowManager.maximize());
         break;
       case "close":
-        windowManager.close();
+        _exitApp();
         break;
       case "launchFortnite":
         _launchKey.currentState?.trigger();
@@ -114,6 +118,34 @@ class _WebAppShellState extends State<WebAppShell> {
         // needs to be rebuilt against this webview UI.
         break;
     }
+  }
+
+  Future<void> _exitApp() async {
+    try {
+      await windowManager.hide();
+    } catch (_) {}
+
+    try {
+      await _serverBrowserController.removeServer(_hostingController.uuid);
+    } catch (_) {}
+
+    try {
+      await _backendController.stop();
+    } catch (_) {}
+
+    try {
+      _gameController.instance.value?.kill();
+    } catch (_) {}
+
+    try {
+      _hostingController.instance.value?.kill();
+    } catch (_) {}
+
+    try {
+      await stopDownloadServer();
+    } catch (_) {}
+
+    exit(0);
   }
 
   void _pushState() {

@@ -88,7 +88,15 @@ class _ImportVersionDialogState extends State<ImportVersionDialog> {
             controller: _nameController,
             validator: _checkVersionName,
             placeholder: translations.versionNameLabel,
-            autovalidateMode: AutovalidateMode.onUserInteraction
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: WidgetStateProperty.resolveWith((states) => BoxDecoration(
+                color: const Color(0xFF12141A),
+                borderRadius: BorderRadius.circular(6.0),
+                border: Border.all(
+                    color: states.contains(WidgetState.focused) ? const Color(0xFF2F7AF0) : const Color(0xFF232730),
+                    width: states.contains(WidgetState.focused) ? 1.4 : 1.0
+                )
+            ))
         ),
       ),
 

@@ -54,6 +54,14 @@ class _FileSelectorState extends State<FileSelector> {
       validator: widget.validator,
       autovalidateMode: widget.validatorMode ?? AutovalidateMode.onUserInteraction,
       key: widget.validatorKey,
+      decoration: WidgetStateProperty.resolveWith((states) => BoxDecoration(
+          color: const Color(0xFF12141A),
+          borderRadius: BorderRadius.circular(6.0),
+          border: Border.all(
+              color: states.contains(WidgetState.focused) ? const Color(0xFF2F7AF0) : const Color(0xFF232730),
+              width: states.contains(WidgetState.focused) ? 1.4 : 1.0
+          )
+      )),
       suffix: !widget.allowNavigator ? null : Button(
           onPressed: _onPressed,
           child: const Icon(FluentIcons.open_folder_horizontal)
