@@ -378,6 +378,23 @@ body {
   background: rgba(255, 255, 255, 0.15);
 }
 
+.btn-secondary {
+  background: rgba(47, 122, 240, 0.12);
+  border: 1px solid rgba(47, 122, 240, 0.35);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-secondary:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
 .btn-icon {
   width: 46px;
   height: 46px;
@@ -535,10 +552,28 @@ body {
 }
 
 .setting-select {
-  background: var(--bg-elevated);
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--bg-elevated);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a8d93' stroke-width='2'><path d='M7 10l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 8px 32px 8px 12px;
   font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.setting-select:hover, .setting-select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.setting-select option {
+  background: var(--bg-elevated);
+  color: var(--text);
 }
