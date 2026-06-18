@@ -22,6 +22,7 @@ import 'package:reboot_launcher/src/pager/abstract_page.dart';
 import 'package:reboot_launcher/src/pager/page_type.dart';
 import 'package:reboot_launcher/src/page/pages.dart';
 import 'package:reboot_launcher/src/messenger/info_bar_area.dart';
+import 'package:reboot_launcher/src/widget/custom_title_bar.dart';
 import 'package:window_manager/window_manager.dart';
 
 final GlobalKey<OverlayTargetState> profileOverlayKey = GlobalKey();
@@ -237,26 +238,33 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
     loadTranslations(context);
     return Container(
         color: FluentTheme.of(context).micaBackgroundColor.withOpacity(0.93),
-        child: Navigator(
-          key: appNavigatorKey,
-          onPopPage: (page, data) => false,
-          pages: [
-            MaterialPage(
-              child: Overlay(
-                key: appOverlayKey,
-                initialEntries: [
-                  OverlayEntry(
-                      maintainState: true,
-                      builder: (context) => Row(
-                        children: [
-                          _buildLateralView(),
-                          _buildBody()
-                        ],
-                      )
+        child: Column(
+          children: [
+            const CustomTitleBar(),
+            Expanded(
+              child: Navigator(
+                key: appNavigatorKey,
+                onPopPage: (page, data) => false,
+                pages: [
+                  MaterialPage(
+                    child: Overlay(
+                      key: appOverlayKey,
+                      initialEntries: [
+                        OverlayEntry(
+                            maintainState: true,
+                            builder: (context) => Row(
+                              children: [
+                                _buildLateralView(),
+                                _buildBody()
+                              ],
+                            )
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
-            )
+            ),
           ],
         )
     );

@@ -1,5 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:get/get.dart';
+import 'package:reboot_launcher/src/button/game_start_button.dart';
 import 'package:reboot_launcher/src/button/version_selector.dart';
+import 'package:reboot_launcher/src/controller/game_controller.dart';
 import 'package:reboot_launcher/src/pager/abstract_page.dart';
 import 'package:reboot_launcher/src/pager/page_type.dart';
 
@@ -63,6 +66,7 @@ class HomePage extends AbstractPage {
 }
 
 class _HomePageState extends AbstractPageState<HomePage> {
+  final GameController _gameController = Get.find<GameController>();
   int _whatsNewPage = 0;
 
   @override
@@ -99,8 +103,8 @@ class _HomePageState extends AbstractPageState<HomePage> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFFFF7A1A),
-              Color(0xFFFFB347),
+              Color(0xFF0B1E3D),
+              Color(0xFF13355C),
             ],
           ),
         ),
@@ -109,15 +113,22 @@ class _HomePageState extends AbstractPageState<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "Project Ocean",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 16.0,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A6FE0),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: const Text(
+                "PROJECT OCEAN",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11.0,
+                ),
               ),
             ),
-            const SizedBox(height: 4.0),
+            const SizedBox(height: 12.0),
             const Text(
               "X Marks The Spot",
               style: TextStyle(
@@ -126,38 +137,51 @@ class _HomePageState extends AbstractPageState<HomePage> {
                 fontSize: 34.0,
               ),
             ),
-            const SizedBox(height: 12.0),
-            const SizedBox(
-              width: 460,
-              child: Text(
-                "Season 8, with the slogan X Marks The Spot, introduced many new "
-                "features including Ballers, Pirate Cannons, and Reboot Vans!",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14.0,
-                ),
+            const SizedBox(height: 8.0),
+            Text(
+              "Season 8 · Pirate Cannons, Ballers & Reboot Vans",
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 14.0,
               ),
             ),
             const SizedBox(height: 20.0),
-            Button(
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(const Color(0xFFFFC93C)),
-                foregroundColor: WidgetStateProperty.all(Colors.black),
-                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 14.0,
-                )),
-              ),
-              onPressed: () {},
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
+            Obx(() {
+              final version = _gameController.selectedVersion.value;
+              if (version == null) {
+                return Button(
+                  onPressed: () => VersionSelector.openImportDialog(null),
+                  child: const Text("Import a build to get started"),
+                );
+              }
+
+              return Row(
                 children: [
-                  Icon(FluentIcons.download, size: 16.0),
-                  SizedBox(width: 8.0),
-                  Text("Download", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                    child: Text(
+                      version.gameVersion,
+                      style: const TextStyle(color: Colors.white, fontSize: 12.0),
+                    ),
+                  ),
+                  const SizedBox(width: 12.0),
+                  LaunchButton(
+                    startLabel: "Launch Fortnite",
+                    stopLabel: "Close Fortnite",
+                    host: false,
+                  ),
+                  const SizedBox(width: 12.0),
+                  IconButton(
+                    icon: Icon(FluentIcons.delete, color: Colors.red),
+                    onPressed: () => _gameController.removeVersion(version),
+                  ),
                 ],
-              ),
-            ),
+              );
+            }),
           ],
         ),
       );

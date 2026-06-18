@@ -142,6 +142,10 @@ Future<void> _startApp() async {
             }
             await windowManager.setPreventClose(true);
             await windowManager.setResizable(true);
+            await windowManager.setTitleBarStyle(
+                TitleBarStyle.hidden,
+                windowButtonVisibility: false
+            );
             if(isWin11) {
               await Window.setEffect(
                   effect: WindowEffect.acrylic,
