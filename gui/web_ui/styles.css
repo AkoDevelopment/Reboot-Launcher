@@ -162,7 +162,10 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: 20px 32px 48px;
-  background: var(--bg-content);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(120, 70, 30, 0.12), transparent 40%),
+    radial-gradient(circle at 100% 10%, rgba(47, 122, 240, 0.10), transparent 45%),
+    var(--bg-content);
 }
 
 /* Top bar inside content */
@@ -193,7 +196,7 @@ body {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--text-muted);
+  background: var(--danger);
 }
 
 .status-dot.online {
@@ -201,18 +204,18 @@ body {
 }
 
 .status-state {
-  background: rgba(138, 141, 147, 0.15);
-  color: var(--text-muted);
-}
-
-.status-state.online {
-  background: rgba(63, 207, 110, 0.15);
-  color: var(--green);
+  background: rgba(224, 69, 76, 0.15);
+  color: var(--danger);
   font-weight: 700;
   font-size: 10px;
   letter-spacing: 0.3px;
   padding: 2px 8px;
   border-radius: 10px;
+}
+
+.status-state.online {
+  background: rgba(63, 207, 110, 0.15);
+  color: var(--green);
 }
 
 .clock {

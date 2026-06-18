@@ -54,7 +54,7 @@ class _WebAppShellState extends State<WebAppShell> {
       await File("${webUiDir.path}\\$fileName").writeAsBytes(
           bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
     }
-    for (final fileName in const ["ocean.ico"]) {
+    for (final fileName in const ["ocean.ico", "user.png", "play.png", "info.png"]) {
       final bytes = await rootBundle.load("web_ui/assets/$fileName");
       await File("${webUiAssetsDir.path}\\$fileName").writeAsBytes(
           bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
@@ -64,6 +64,7 @@ class _WebAppShellState extends State<WebAppShell> {
     await _controller.loadUrl(Uri.file("${webUiDir.path}\\index.html").toString());
 
     _webMessageSubscription = _controller.webMessage.listen(_onWebMessage);
+    _pushState();
     _pushStateTimer = Timer.periodic(const Duration(seconds: 1), (_) => _pushState());
 
     if (!mounted) return;
