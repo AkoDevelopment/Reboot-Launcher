@@ -34,8 +34,8 @@ final AccentColor kProjectOceanAccent = AccentColor.swatch(const <String, Color>
   'lightest': Color(0xFF9EC1FA),
 });
 
-const double kDefaultWindowWidth = 1164;
-const double kDefaultWindowHeight = 864;
+const double kDefaultWindowWidth = 880;
+const double kDefaultWindowHeight = 520;
 const String kCustomUrlSchema = "Reboot";
 
 Version? appVersion;
