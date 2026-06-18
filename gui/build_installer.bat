@@ -30,7 +30,8 @@ if errorlevel 1 (
     exit /b 1
 )
 
-for /f "delims=" %%v in ('powershell -NoProfile -Command "(Get-Content pubspec.yaml | Select-String '^version:').ToString().Split(':')[1].Trim().Trim('\"')"') do set APP_VERSION=%%v
+for /f "tokens=1,2 delims= " %%a in ('findstr /b "version:" pubspec.yaml') do set APP_VERSION=%%b
+set APP_VERSION=%APP_VERSION:"=%
 
 set SRC=dist\%APP_VERSION%\Output\reboot_launcher-%APP_VERSION%-windows-setup.exe
 set DEST=C:\Users\khana\installer-output\ProjectOcean-%APP_VERSION%-windows-setup.exe
