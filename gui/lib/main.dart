@@ -24,6 +24,16 @@ import 'package:window_manager/window_manager.dart';
 
 import 'l10n/reboot_localizations.dart';
 
+final AccentColor kProjectOceanAccent = AccentColor.swatch(const <String, Color>{
+  'darkest': Color(0xFF15315E),
+  'darker': Color(0xFF1A3F76),
+  'dark': Color(0xFF20529A),
+  'normal': Color(0xFF2F7AF0),
+  'light': Color(0xFF4A8CF5),
+  'lighter': Color(0xFF6FA3F7),
+  'lightest': Color(0xFF9EC1FA),
+});
+
 const double kDefaultWindowWidth = 1164;
 const double kDefaultWindowHeight = 864;
 const String kCustomUrlSchema = "Reboot";
@@ -200,7 +210,7 @@ class _RebootApplicationState extends State<RebootApplication> {
       supportedLocales: AppLocalizations.supportedLocales,
       themeMode: _settingsController.themeMode.value,
       debugShowCheckedModeBanner: false,
-      color: SystemTheme.accentColor.accent.toAccentColor(),
+      color: kProjectOceanAccent,
       darkTheme: _createTheme(Brightness.dark),
       theme: _createTheme(Brightness.light),
       home: const RebootPager()
@@ -208,8 +218,10 @@ class _RebootApplicationState extends State<RebootApplication> {
 
   FluentThemeData _createTheme(Brightness brightness) => FluentThemeData(
       brightness: brightness,
-      accentColor: SystemTheme.accentColor.accent.toAccentColor(),
+      accentColor: kProjectOceanAccent,
       visualDensity: VisualDensity.standard,
-      scaffoldBackgroundColor: Colors.transparent
+      scaffoldBackgroundColor: Colors.transparent,
+      cardColor: const Color(0xFF1A1D24),
+      micaBackgroundColor: const Color(0xFF12141A)
   );
 }
