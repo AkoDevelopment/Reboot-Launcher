@@ -9,8 +9,14 @@ import 'package:reboot_launcher/src/button/game_start_button.dart';
 import 'package:reboot_launcher/src/button/version_selector.dart';
 import 'package:reboot_launcher/src/controller/backend_controller.dart';
 import 'package:reboot_launcher/src/controller/game_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_windows/webview_windows.dart';
 import 'package:window_manager/window_manager.dart';
+
+// TODO: replace with Project Ocean's real Discord invite + issue tracker URLs.
+const String _kDiscordInviteUrl = "https://discord.gg/";
+const String _kReportBugUrl = "https://discord.gg/";
 
 /// Renders the custom HTML/CSS UI (gui/web_ui) inside a WebView2 surface and
 /// bridges it to the native app: window controls, the real launch/import
@@ -41,10 +47,16 @@ class _WebAppShellState extends State<WebAppShell> {
 
   Future<void> _init() async {
     final webUiDir = Directory("${installationDirectory.path}\\web_ui");
-    await webUiDir.create(recursive: true);
+    final webUiAssetsDir = Directory("${webUiDir.path}\\assets");
+    await webUiAssetsDir.create(recursive: true);
     for (final fileName in const ["index.html", "styles.css", "script.js"]) {
       final bytes = await rootBundle.load("web_ui/$fileName");
       await File("${webUiDir.path}\\$fileName").writeAsBytes(
+          bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    }
+    for (final fileName in const ["ocean.ico"]) {
+      final bytes = await rootBundle.load("web_ui/assets/$fileName");
+      await File("${webUiAssetsDir.path}\\$fileName").writeAsBytes(
           bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
     }
 
@@ -83,6 +95,22 @@ class _WebAppShellState extends State<WebAppShell> {
         if (version != null) {
           _gameController.removeVersion(version);
         }
+        break;
+      case "startDrag":
+        windowManager.startDragging();
+        break;
+      case "openDiscord":
+        launchUrlString(_kDiscordInviteUrl);
+        break;
+      case "reportBug":
+        launchUrlString(_kReportBugUrl);
+        break;
+      case "openInstallDir":
+        launchUrl(installationDirectory.uri);
+        break;
+      case "startTutorial":
+        // TODO: the onboarding tour targets the old native sidebar/pages and
+        // needs to be rebuilt against this webview UI.
         break;
     }
   }

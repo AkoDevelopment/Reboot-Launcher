@@ -89,6 +89,7 @@ flutter:
   generate: true
   assets:
     - web_ui/
+    - web_ui/assets/
     - assets/icons/
     - assets/images/
     - assets/backend/

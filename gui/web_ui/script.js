@@ -19,9 +19,42 @@ function callNative(action, payload) {
   }
 }
 
+// Window controls
 document.getElementById("minimize-btn")?.addEventListener("click", () => callNative("minimize"));
 document.getElementById("close-btn")?.addEventListener("click", () => callNative("close"));
 
+const dragRegion = document.getElementById("drag-region");
+dragRegion?.addEventListener("mousedown", (event) => {
+  if (event.target.closest(".title-bar-buttons")) return;
+  if (event.button !== 0) return;
+  callNative("startDrag");
+});
+
+// Play page actions
 document.getElementById("launch-btn")?.addEventListener("click", () => callNative("launchFortnite"));
 document.getElementById("remove-btn")?.addEventListener("click", () => callNative("removeBuild"));
 document.getElementById("import-btn")?.addEventListener("click", () => callNative("importBuild"));
+
+// Info page actions
+document.getElementById("discord-btn")?.addEventListener("click", () => callNative("openDiscord"));
+document.getElementById("tutorial-btn")?.addEventListener("click", () => callNative("startTutorial"));
+document.getElementById("bug-report-btn")?.addEventListener("click", () => callNative("reportBug"));
+
+// Settings page actions
+document.getElementById("language-select")?.addEventListener("change", (event) => callNative("setLanguage", event.target.value));
+document.getElementById("theme-select")?.addEventListener("change", (event) => callNative("setTheme", event.target.value));
+document.getElementById("install-dir-btn")?.addEventListener("click", () => callNative("openInstallDir"));
+
+// Sidebar page navigation
+const navIcons = document.querySelectorAll(".nav-icon[data-page]");
+navIcons.forEach((icon) => {
+  icon.addEventListener("click", () => {
+    const targetPage = icon.dataset.page;
+
+    navIcons.forEach((other) => other.classList.toggle("active", other === icon));
+
+    document.querySelectorAll(".page").forEach((page) => {
+      page.hidden = page.id !== `page-${targetPage}`;
+    });
+  });
+});
