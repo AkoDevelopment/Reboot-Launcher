@@ -10,9 +10,7 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000 * 30);
 
-// These hooks call into the native host app once wired up (e.g. via
-// webview_windows' executeScript bridge or window.chrome.webview).
-// They're no-ops in a plain browser preview.
+// Bridges to the native Flutter host (see lib/src/widget/web_app_shell.dart).
 function callNative(action, payload) {
   if (window.chrome && window.chrome.webview) {
     window.chrome.webview.postMessage({ action, payload });
@@ -22,9 +20,8 @@ function callNative(action, payload) {
 }
 
 document.getElementById("minimize-btn")?.addEventListener("click", () => callNative("minimize"));
-document.getElementById("maximize-btn")?.addEventListener("click", () => callNative("maximize"));
 document.getElementById("close-btn")?.addEventListener("click", () => callNative("close"));
 
-document.querySelector(".btn-primary")?.addEventListener("click", () => callNative("launchFortnite"));
-document.querySelector(".btn-secondary")?.addEventListener("click", () => callNative("importBuild"));
-document.querySelector(".btn-icon.danger")?.addEventListener("click", () => callNative("removeBuild"));
+document.getElementById("launch-btn")?.addEventListener("click", () => callNative("launchFortnite"));
+document.getElementById("remove-btn")?.addEventListener("click", () => callNative("removeBuild"));
+document.getElementById("import-btn")?.addEventListener("click", () => callNative("importBuild"));

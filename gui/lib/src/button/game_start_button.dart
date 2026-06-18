@@ -31,10 +31,14 @@ class LaunchButton extends StatefulWidget {
   const LaunchButton({Key? key, required this.host, required this.startLabel, required this.stopLabel}) : super(key: key);
 
   @override
-  State<LaunchButton> createState() => _LaunchButtonState();
+  State<LaunchButton> createState() => LaunchButtonState();
 }
 
-class _LaunchButtonState extends State<LaunchButton> {
+class LaunchButtonState extends State<LaunchButton> {
+  /// Triggers the exact same start/stop logic as tapping the button,
+  /// for callers (e.g. the webview UI bridge) that don't render this widget.
+  Future<void> trigger() => _toggle();
+
   static const Duration _kRebootDelay = Duration(seconds: 10);
 
   final GameController _gameController = Get.find<GameController>();

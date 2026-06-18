@@ -8,6 +8,14 @@ REM   - dart pub global activate flutter_distributor
 REM   - Inno Setup 6 installed. If installed outside "C:\Program Files (x86)\Inno Setup 6",
 REM     create a junction there pointing at the real install:
 REM       mklink /J "C:\Program Files (x86)\Inno Setup 6" "<real install path>"
+REM   - webview_windows 0.4.0's native plugin uses deprecated <experimental/coroutine>,
+REM     which newer MSVC toolchains (the "Visual Studio 18" preview installed here) reject
+REM     outright. Patched by adding this line to the END of:
+REM       %LOCALAPPDATA%\Pub\Cache\hosted\pub.dev\webview_windows-0.4.0\windows\CMakeLists.txt
+REM     target_compile_definitions(${PLUGIN_NAME} PRIVATE _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS)
+REM     This lives in the GLOBAL pub cache, not this repo -- if you clear the pub cache,
+REM     reinstall Flutter, or build on another machine, you'll need to reapply this patch
+REM     (run `flutter pub get` once first so the package gets fetched, then edit that file).
 
 setlocal
 
