@@ -236,6 +236,10 @@ body {
   cursor: pointer;
 }
 
+.user-pill[hidden] {
+  display: none;
+}
+
 .user-avatar-placeholder {
   width: 30px;
   height: 30px;

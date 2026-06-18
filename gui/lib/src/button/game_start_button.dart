@@ -184,8 +184,11 @@ class LaunchButtonState extends State<LaunchButton> {
       return null;
     }
 
-    if(!forceLinkedHosting && _backendController.type.value == AuthBackendType.embedded && !isLocalHost(_backendController.gameServerAddress.text)) {
-      log("[${host ? 'HOST' : 'GAME'}] Backend is not set to embedded and/or not pointing to the local game server");
+    // Only prompt to auto-start a local game server when using a backend the
+    // launcher doesn't control (remote). For embedded/local, the user is
+    // already managing their own backend/game server setup.
+    if(!forceLinkedHosting && _backendController.type.value != AuthBackendType.remote) {
+      log("[${host ? 'HOST' : 'GAME'}] Backend type does not require automatic game server prompting");
       return null;
     }
 
