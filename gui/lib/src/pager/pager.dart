@@ -19,10 +19,9 @@ import 'package:reboot_launcher/src/messenger/dialog.dart';
 import 'package:reboot_launcher/src/messenger/info_bar.dart';
 import 'package:reboot_launcher/src/messenger/overlay.dart';
 import 'package:reboot_launcher/src/pager/abstract_page.dart';
+import 'package:reboot_launcher/src/pager/page_type.dart';
 import 'package:reboot_launcher/src/page/pages.dart';
-import 'package:reboot_launcher/src/util/updater.dart';
 import 'package:reboot_launcher/src/messenger/info_bar_area.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 final GlobalKey<OverlayTargetState> profileOverlayKey = GlobalKey();
@@ -98,24 +97,8 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
   }
 
   void _checkUpdates() {
-    checkLauncherUpdate(
-      onUpdate: (latestVersion) {
-        late InfoBarEntry infoBar;
-        infoBar = showRebootInfoBar(
-            translations.updateAvailable(latestVersion.toString()),
-            duration: null,
-            severity: InfoBarSeverity.warning,
-            action: Button(
-              child: Text(translations.updateAvailableAction),
-              onPressed: () {
-                infoBar.close();
-                launchUrl(Uri.parse("https://github.com/Auties00/reboot_launcher/releases"));
-              },
-            )
-        );
-      }
-    );
-
+    // Project Ocean: this isn't a published fork with its own release feed,
+    // so there's nothing meaningful to check against upstream's versioning.
     if(!dllsDirectory.existsSync()) {
       dllsDirectory.createSync(recursive: true);
     }
@@ -444,16 +427,25 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
     ),
   );
 
-  Widget _buildNavigationRail() => Scrollbar(
-      child: ListView.separated(
-        primary: true,
-        itemCount: pages.length,
-        separatorBuilder: (context, index) => const SizedBox(
-            height: 8.0
-        ),
-        itemBuilder: (context, index) => _buildNavigationItem(pages[index]),
-      )
-  );
+  static const Set<PageType> _hiddenFromNav = {
+    PageType.host,
+    PageType.backend,
+    PageType.browser,
+  };
+
+  Widget _buildNavigationRail() {
+    final visiblePages = pages.where((page) => !_hiddenFromNav.contains(page.type)).toList();
+    return Scrollbar(
+        child: ListView.separated(
+          primary: true,
+          itemCount: visiblePages.length,
+          separatorBuilder: (context, index) => const SizedBox(
+              height: 8.0
+          ),
+          itemBuilder: (context, index) => _buildNavigationItem(visiblePages[index]),
+        )
+    );
+  }
 
   Widget _buildNavigationItem(AbstractPage page) {
     final index = page.type.index;

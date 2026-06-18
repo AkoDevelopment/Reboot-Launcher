@@ -52,7 +52,6 @@ class _SettingsPageState extends AbstractPageState<SettingsPage> {
   List<Widget> get settings => [
     _language,
     _theme,
-    _internalFiles,
     _installationDirectory,
   ];
 
