@@ -43,10 +43,11 @@
       <div class="topbar-spacer"></div>
       <span class="clock" id="clock-text">7:41 PM</span>
       <div class="divider"></div>
-      <div class="user-pill">
-        <img src="assets/user.png" class="user-avatar" alt="">
+      <button class="btn-secondary" id="login-btn" hidden>Login</button>
+      <div class="user-pill" id="user-pill" hidden data-tooltip="Logout">
+        <img src="assets/user.png" class="user-avatar" alt="" id="user-avatar">
         <div class="user-info">
-          <span class="user-name">ako</span>
+          <span class="user-name" id="user-name">ako</span>
           <span class="user-role">Member</span>
         </div>
         <svg class="chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
@@ -55,7 +56,7 @@
 
     <section class="page" id="page-play">
       <h1 class="page-title">Play</h1>
-      <p class="page-subtitle">Play now, <span class="accent">akosamaa!</span></p>
+      <p class="page-subtitle" id="play-subtitle">Please <a href="#" id="play-subtitle-login">login</a> to play.</p>
 
       <section class="hero-banner">
         <div class="hero-glow"></div>

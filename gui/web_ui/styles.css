@@ -290,6 +290,23 @@ body {
   font-weight: 600;
 }
 
+.page-subtitle a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.page-subtitle a:hover {
+  text-decoration: underline;
+}
+
+.user-pill[data-tooltip]:hover::after {
+  left: auto;
+  right: 0;
+  top: calc(100% + 6px);
+  transform: none;
+}
+
 /* Hero banner */
 .hero-banner {
   position: relative;

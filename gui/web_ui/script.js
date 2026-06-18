@@ -30,6 +30,14 @@ dragRegion?.addEventListener("mousedown", (event) => {
   callNative("startDrag");
 });
 
+// Auth
+document.getElementById("login-btn")?.addEventListener("click", () => callNative("login"));
+document.getElementById("user-pill")?.addEventListener("click", () => callNative("logout"));
+document.getElementById("play-subtitle-login")?.addEventListener("click", (event) => {
+  event.preventDefault();
+  callNative("login");
+});
+
 // Play page actions
 document.getElementById("launch-btn")?.addEventListener("click", () => callNative("launchFortnite"));
 document.getElementById("remove-btn")?.addEventListener("click", () => callNative("removeBuild"));

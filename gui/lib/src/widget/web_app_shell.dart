@@ -7,10 +7,13 @@ import 'package:get/get.dart';
 import 'package:reboot_common/common.dart';
 import 'package:reboot_launcher/src/button/game_start_button.dart';
 import 'package:reboot_launcher/src/button/version_selector.dart';
+import 'package:reboot_launcher/src/controller/auth_controller.dart';
 import 'package:reboot_launcher/src/controller/backend_controller.dart';
 import 'package:reboot_launcher/src/controller/game_controller.dart';
 import 'package:reboot_launcher/src/controller/hosting_controller.dart';
 import 'package:reboot_launcher/src/controller/server_browser_controller.dart';
+import 'package:reboot_launcher/src/message/login.dart';
+import 'package:reboot_launcher/src/messenger/dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_windows/webview_windows.dart';
@@ -38,6 +41,7 @@ class _WebAppShellState extends State<WebAppShell> {
   final BackendController _backendController = Get.find<BackendController>();
   final HostingController _hostingController = Get.find<HostingController>();
   final ServerBrowserController _serverBrowserController = Get.find<ServerBrowserController>();
+  final AuthController _authController = Get.find<AuthController>();
 
   StreamSubscription? _webMessageSubscription;
   Timer? _pushStateTimer;
@@ -117,6 +121,12 @@ class _WebAppShellState extends State<WebAppShell> {
         // TODO: the onboarding tour targets the old native sidebar/pages and
         // needs to be rebuilt against this webview UI.
         break;
+      case "login":
+        showRebootDialog(builder: (context) => const LoginDialog());
+        break;
+      case "logout":
+        _authController.logout();
+        break;
     }
   }
 
@@ -152,7 +162,9 @@ class _WebAppShellState extends State<WebAppShell> {
     final version = _gameController.selectedVersion.value;
     final online = _backendController.started.value;
     final started = _gameController.started.value;
-    final username = _gameController.username.text;
+    final loggedIn = _authController.loggedIn.value;
+    final username = _authController.username.value;
+    final avatarUrl = _authController.avatarUrl.value;
 
     final script = '''
       (function() {
@@ -173,12 +185,36 @@ class _WebAppShellState extends State<WebAppShell> {
         const versionBadge = document.getElementById("version-badge");
         if (versionBadge) versionBadge.textContent = ${jsonEncode(version?.gameVersion ?? "")};
 
-        const userName = document.querySelector(".user-name");
-        if (userName) userName.textContent = ${jsonEncode(username)};
+        const loginBtn = document.getElementById("login-btn");
+        const userPill = document.getElementById("user-pill");
+        if (loginBtn) loginBtn.hidden = ${loggedIn};
+        if (userPill) userPill.hidden = ${!loggedIn};
+
+        const userName = document.getElementById("user-name");
+        if (userName) userName.textContent = ${jsonEncode(username ?? "")};
+
+        const userAvatar = document.getElementById("user-avatar");
+        if (userAvatar && ${jsonEncode(avatarUrl)} !== null) userAvatar.src = ${jsonEncode(avatarUrl)};
+
+        const playSubtitle = document.getElementById("play-subtitle");
+        if (playSubtitle) {
+          playSubtitle.innerHTML = ${loggedIn}
+            ? 'Play now, <span class="accent">' + ${jsonEncode(username ?? "")} + '!</span>'
+            : 'Please <a href="#" id="play-subtitle-login">login</a> to play.';
+        }
       })();
     ''';
 
-    _controller.executeScript(script);
+    _controller.executeScript(script).then((_) {
+      // The login link inside play-subtitle gets replaced via innerHTML above,
+      // so its click listener needs to be re-attached every push.
+      _controller.executeScript('''
+        document.getElementById("play-subtitle-login")?.addEventListener("click", (event) => {
+          event.preventDefault();
+          window.chrome.webview.postMessage({ action: "login" });
+        });
+      ''');
+    });
   }
 
   String jsonEncode(Object? value) => value == null ? "null" : '"${value.toString().replaceAll('"', '\\"')}"';

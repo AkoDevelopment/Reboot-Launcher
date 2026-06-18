@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:local_notifier/local_notifier.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:reboot_common/common.dart';
+import 'package:reboot_launcher/src/controller/auth_controller.dart';
 import 'package:reboot_launcher/src/controller/backend_controller.dart';
 import 'package:reboot_launcher/src/controller/dll_controller.dart';
 import 'package:reboot_launcher/src/controller/game_controller.dart';
@@ -111,6 +112,10 @@ Future<void> _startApp() async {
     await runCatching(
         callable: () => Get.put(BackendController(), permanent: true),
         errorFormatter: (error) => "Cannot create backend controller: $error"
+    );
+    await runCatching(
+        callable: () => Get.put(AuthController(), permanent: true),
+        errorFormatter: (error) => "Cannot create auth controller: $error"
     );
     await runCatching(
         callable: () => Get.put(HostingController(), permanent: true),
