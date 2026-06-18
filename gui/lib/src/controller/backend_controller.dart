@@ -104,6 +104,12 @@ class BackendController extends GetxController {
       return value;
     }
 
+    // Project Ocean's backend runs on khana's machine, reachable to friends
+    // over Radmin VPN -- 127.0.0.1 would only ever work on the host's own PC.
+    if (type.value == AuthBackendType.local) {
+      return kDefaultLocalBackendHost;
+    }
+
     if (type.value != AuthBackendType.remote) {
       return kDefaultBackendHost;
     }

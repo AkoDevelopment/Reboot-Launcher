@@ -117,6 +117,13 @@ class _WebAppShellState extends State<WebAppShell> {
       case "openInstallDir":
         launchUrl(installationDirectory.uri);
         break;
+      case "setBackendAddress":
+        final address = message["payload"] as String?;
+        if (address == null || !address.contains(":")) return;
+        final parts = address.split(":");
+        _backendController.host.text = parts[0].trim();
+        _backendController.port.text = parts[1].trim();
+        break;
       case "startTutorial":
         // TODO: the onboarding tour targets the old native sidebar/pages and
         // needs to be rebuilt against this webview UI.
@@ -186,15 +193,20 @@ class _WebAppShellState extends State<WebAppShell> {
         if (versionBadge) versionBadge.textContent = ${jsonEncode(version?.gameVersion ?? "")};
 
         const loginBtn = document.getElementById("login-btn");
-        const userPill = document.getElementById("user-pill");
+        const userPillWrapper = document.getElementById("user-pill-wrapper");
         if (loginBtn) loginBtn.hidden = ${loggedIn};
-        if (userPill) userPill.hidden = ${!loggedIn};
+        if (userPillWrapper) userPillWrapper.hidden = ${!loggedIn};
 
         const userName = document.getElementById("user-name");
         if (userName) userName.textContent = ${jsonEncode(username ?? "")};
 
         const userAvatar = document.getElementById("user-avatar");
         if (userAvatar && ${jsonEncode(avatarUrl)} !== null) userAvatar.src = ${jsonEncode(avatarUrl)};
+
+        const backendAddressInput = document.getElementById("backend-address-input");
+        if (backendAddressInput && document.activeElement !== backendAddressInput) {
+          backendAddressInput.value = ${jsonEncode("${_backendController.host.text}:${_backendController.port.text}")};
+        }
 
         const playSubtitle = document.getElementById("play-subtitle");
         if (playSubtitle) {

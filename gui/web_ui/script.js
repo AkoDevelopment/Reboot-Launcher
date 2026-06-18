@@ -51,6 +51,10 @@ document.getElementById("bug-report-btn")?.addEventListener("click", () => callN
 document.getElementById("language-select")?.addEventListener("change", (event) => callNative("setLanguage", event.target.value));
 document.getElementById("theme-select")?.addEventListener("change", (event) => callNative("setTheme", event.target.value));
 document.getElementById("install-dir-btn")?.addEventListener("click", () => callNative("openInstallDir"));
+document.getElementById("backend-address-save-btn")?.addEventListener("click", () => {
+  const input = document.getElementById("backend-address-input");
+  if (input && input.value.trim()) callNative("setBackendAddress", input.value.trim());
+});
 
 // webview_windows relays mouse wheel input to the embedded WebView2 surface
 // via a native bridge that doesn't always target the correct scrollable
