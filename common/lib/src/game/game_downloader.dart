@@ -14,9 +14,18 @@ import 'package:uuid/uuid.dart';
 final File rebootBeforeS20DllFile = File("${dllsDirectory.path}\\reboot.dll");
 final File rebootAboveS20DllFile = File("${dllsDirectory.path}\\rebootS20.dll");
 
+// Project Ocean: points at our own fork (which carries the launchargs.h patch
+// for configuring SecondsUntilTravel/WarmupRequiredPlayerCount/bNoMCP via launch
+// args) instead of upstream. We only patched the below-S20 build since we only
+// run Season 8.51, so above-S20 still falls back to upstream.
 const String kRebootBelowS20DownloadUrl =
-    "https://nightly.link/Milxnor/Project-Reboot-3.0/workflows/msbuild/master/Reboot.zip";
+    "https://nightly.link/AkoDevelopment/Project-Reboot-3.0/workflows/msbuild/master/Reboot.zip";
 const String kRebootAboveS20DownloadUrl =
+    "https://nightly.link/Milxnor/Project-Reboot-3.0/workflows/msbuild/master/RebootS20.zip";
+
+const String _kRebootBelowS20FallbackDownloadUrl =
+    "https://nightly.link/Milxnor/Project-Reboot-3.0/workflows/msbuild/master/Reboot.zip";
+const String _kRebootAboveS20FallbackDownloadUrl =
     "https://nightly.link/Milxnor/Project-Reboot-3.0/workflows/msbuild/master/RebootS20.zip";
 
 const String kStopBuildDownloadSignal = "kill";

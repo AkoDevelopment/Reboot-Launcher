@@ -1,9 +1,9 @@
 script_template: "custom-inno-setup-script.iss"
-app_id: 31868Auties00.RebootLauncher
-publisher_name: Auties00
-publisher_url: https://github.com/Auties00
-display_name: Reboot Launcher
-install_dir_name: Reboot Launcher
+app_id: ProjectOcean.Launcher
+publisher_name: Project Ocean
+publisher_url: https://github.com/AkoDevelopment
+display_name: Project Ocean
+install_dir_name: Project Ocean
 create_desktop_icon: true
 locales:
   - en

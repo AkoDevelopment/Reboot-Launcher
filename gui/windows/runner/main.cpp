@@ -16,7 +16,7 @@
 bool IsAlreadyOpen(){
     HANDLE hMutex = CreateMutexW(NULL, TRUE, L"RebootLauncherNewMutex");
     if (hMutex == NULL && GetLastError() == ERROR_ALREADY_EXISTS) {
-        HWND hwndExisting = FindWindowW(NULL, L"Reboot Launcher");
+        HWND hwndExisting = FindWindowW(NULL, L"Project Ocean");
         if (hwndExisting != NULL) {
             ShowWindow(hwndExisting, SW_RESTORE);
             SetForegroundWindow(hwndExisting);
@@ -71,7 +71,7 @@ bool SendAppLinkToInstance(const std::wstring& title) {
 
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
-  if(SendAppLinkToInstance(L"Reboot Launcher")) {
+  if(SendAppLinkToInstance(L"Project Ocean")) {
     return EXIT_SUCCESS;
   }
 
@@ -96,7 +96,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
-  if (!window.CreateAndShow(L"Reboot Launcher", origin, size)) {
+  if (!window.CreateAndShow(L"Project Ocean", origin, size)) {
     return EXIT_FAILURE;
   }
 

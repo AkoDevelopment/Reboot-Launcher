@@ -70,7 +70,7 @@ Future<void> _startApp() async {
     );
     await runCatching(
         callable: () => localNotifier.setup(
-            appName: 'Reboot Launcher',
+            appName: 'Project Ocean',
             shortcutPolicy: ShortcutPolicy.ignore
         ),
         errorFormatter: (error) => "Cannot create installation directory: $error"
