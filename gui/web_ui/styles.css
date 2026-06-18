@@ -580,3 +580,21 @@ body {
   background: var(--bg-elevated);
   color: var(--text);
 }
+
+/* Scrollbar */
+.content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: #2a2d36;
+  border-radius: 5px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: #383c47;
+}
