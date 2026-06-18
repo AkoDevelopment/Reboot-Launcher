@@ -17,7 +17,6 @@ import 'package:reboot_launcher/src/controller/server_browser_controller.dart';
 import 'package:reboot_launcher/src/controller/settings_controller.dart';
 import 'package:reboot_launcher/src/message/error.dart';
 import 'package:reboot_launcher/src/pager/pager.dart';
-import 'package:reboot_launcher/src/util/os.dart';
 import 'package:reboot_launcher/src/util/url_protocol.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:version/version.dart';
@@ -146,13 +145,11 @@ Future<void> _startApp() async {
                 TitleBarStyle.hidden,
                 windowButtonVisibility: false
             );
-            if(isWin11) {
-              await Window.setEffect(
-                  effect: WindowEffect.acrylic,
-                  color: Colors.green,
-                  dark: isDarkMode
-              );
-            }
+            await Window.setEffect(
+                effect: WindowEffect.solid,
+                color: const Color(0xFF0A0A0A),
+                dark: true
+            );
           } finally {
             windowManager.show();
           }

@@ -237,7 +237,7 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
     _settingsController.language.value;
     loadTranslations(context);
     return Container(
-        color: FluentTheme.of(context).micaBackgroundColor.withOpacity(0.93),
+        color: const Color(0xFF0A0A0A),
         child: Column(
           children: [
             const CustomTitleBar(),
@@ -417,7 +417,7 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
 
   Widget _buildLateralView() => Container(
     width: 72,
-    color: FluentTheme.of(context).micaBackgroundColor.withOpacity(0.6),
+    color: const Color(0xFF141414),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
