@@ -184,11 +184,10 @@ class LaunchButtonState extends State<LaunchButton> {
       return null;
     }
 
-    // Only prompt to auto-start a local game server when using a backend the
-    // launcher doesn't control (remote). For embedded/local, the user is
-    // already managing their own backend/game server setup.
-    if(!forceLinkedHosting && _backendController.type.value != AuthBackendType.remote) {
-      log("[${host ? 'HOST' : 'GAME'}] Backend type does not require automatic game server prompting");
+    // Project Ocean always has its own dedicated game server running --
+    // never prompt to auto-host one locally.
+    if(!forceLinkedHosting) {
+      log("[${host ? 'HOST' : 'GAME'}] Automatic game server prompting is disabled for Project Ocean");
       return null;
     }
 

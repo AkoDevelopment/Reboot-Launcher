@@ -32,7 +32,7 @@ class BackendController extends GetxController {
   BackendController() {
     _storage = appWithNoStorage ? null : GetStorage(storageName);
     started = RxBool(false);
-    type = Rx(AuthBackendType.values.elementAt(_storage?.read("type") ?? AuthBackendType.local.index));
+    type = Rx(AuthBackendType.values.elementAt(_storage?.read("type") ?? AuthBackendType.remote.index));
     type.listen((value) {
       host.text = _readHost();
       port.text = _readPort();
@@ -104,17 +104,14 @@ class BackendController extends GetxController {
       return value;
     }
 
-    // Project Ocean's backend runs on khana's machine, reachable to friends
-    // over Radmin VPN -- 127.0.0.1 would only ever work on the host's own PC.
-    if (type.value == AuthBackendType.local) {
-      return kDefaultLocalBackendHost;
-    }
-
     if (type.value != AuthBackendType.remote) {
       return kDefaultBackendHost;
     }
 
-    return "";
+    // Project Ocean's backend runs on khana's machine, reachable to friends
+    // over Radmin VPN. "local" type always hardcodes 127.0.0.1 regardless of
+    // this value, so a genuinely different machine must use "remote" instead.
+    return kDefaultLocalBackendHost;
   }
 
   String _readPort() {
@@ -122,7 +119,7 @@ class BackendController extends GetxController {
     if (stored != null) return stored;
 
     // Project Ocean's backend listens on 8080, unlike the bundled embedded backend (3551).
-    if (type.value == AuthBackendType.local) return "8080";
+    if (type.value == AuthBackendType.remote) return "8080";
 
     return kDefaultBackendPort.toString();
   }
