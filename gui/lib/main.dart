@@ -99,6 +99,7 @@ Future<void> _startApp() async {
           await GetStorage(SettingsController.storageName, settingsDirectory.path).initStorage;
           await GetStorage(HostingController.storageName, settingsDirectory.path).initStorage;
           await GetStorage(DllController.storageName, settingsDirectory.path).initStorage;
+          await GetStorage(AuthController.storageName, settingsDirectory.path).initStorage;
         },
         errorFormatter:   (error) {
           appWithNoStorage = true;

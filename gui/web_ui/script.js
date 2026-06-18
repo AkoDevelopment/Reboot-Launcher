@@ -32,7 +32,6 @@ dragRegion?.addEventListener("mousedown", (event) => {
 
 // Auth
 document.getElementById("login-btn")?.addEventListener("click", () => callNative("login"));
-document.getElementById("user-pill")?.addEventListener("click", () => callNative("logout"));
 document.getElementById("play-subtitle-login")?.addEventListener("click", (event) => {
   event.preventDefault();
   callNative("login");
@@ -63,14 +62,38 @@ contentArea?.addEventListener("wheel", (event) => {
 
 // Sidebar page navigation
 const navIcons = document.querySelectorAll(".nav-icon[data-page]");
-navIcons.forEach((icon) => {
-  icon.addEventListener("click", () => {
-    const targetPage = icon.dataset.page;
 
-    navIcons.forEach((other) => other.classList.toggle("active", other === icon));
+function switchToPage(targetPage) {
+  navIcons.forEach((icon) => icon.classList.toggle("active", icon.dataset.page === targetPage));
 
-    document.querySelectorAll(".page").forEach((page) => {
-      page.hidden = page.id !== `page-${targetPage}`;
-    });
+  document.querySelectorAll(".page").forEach((page) => {
+    page.hidden = page.id !== `page-${targetPage}`;
   });
+}
+
+navIcons.forEach((icon) => {
+  icon.addEventListener("click", () => switchToPage(icon.dataset.page));
+});
+
+// User dropdown
+const userPill = document.getElementById("user-pill");
+const userDropdown = document.getElementById("user-dropdown");
+
+userPill?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  userDropdown.hidden = !userDropdown.hidden;
+});
+
+document.addEventListener("click", () => {
+  if (userDropdown && !userDropdown.hidden) userDropdown.hidden = true;
+});
+
+document.getElementById("settings-dropdown-btn")?.addEventListener("click", () => {
+  switchToPage("settings");
+  userDropdown.hidden = true;
+});
+
+document.getElementById("logout-dropdown-btn")?.addEventListener("click", () => {
+  callNative("logout");
+  userDropdown.hidden = true;
 });

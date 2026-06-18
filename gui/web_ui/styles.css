@@ -229,6 +229,14 @@ body {
   background: var(--border);
 }
 
+.user-pill-wrapper {
+  position: relative;
+}
+
+.user-pill-wrapper[hidden] {
+  display: none;
+}
+
 .user-pill {
   display: flex;
   align-items: center;
@@ -236,14 +244,68 @@ body {
   cursor: pointer;
 }
 
-.user-pill[hidden] {
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px;
+  z-index: 20;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.user-dropdown[hidden] {
   display: none;
 }
 
-.user-avatar-placeholder {
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.user-dropdown-item svg {
+  width: 16px;
+  height: 16px;
+}
+
+.user-dropdown-item:hover {
+  background: #21242c;
+}
+
+.user-dropdown-item.danger {
+  color: var(--danger);
+}
+
+.user-dropdown-item.danger:hover {
+  background: rgba(224, 69, 76, 0.12);
+}
+
+.user-avatar, .user-avatar-placeholder {
   width: 30px;
   height: 30px;
   border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  object-fit: cover;
+  background: #2a2d36;
+}
+
+.user-avatar-placeholder {
   background: linear-gradient(135deg, #8a8f99, #4d525c);
   color: #fff;
   font-size: 13px;
@@ -302,13 +364,6 @@ body {
 
 .page-subtitle a:hover {
   text-decoration: underline;
-}
-
-.user-pill[data-tooltip]:hover::after {
-  left: auto;
-  right: 0;
-  top: calc(100% + 6px);
-  transform: none;
 }
 
 /* Hero banner */
