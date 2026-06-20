@@ -1,6 +1,6 @@
 name: reboot_launcher
 description: Graphical User Interface for Project Reboot
-version: "1.0.0"
+version: "1.0.1"
 
 publish_to: 'none'
 
