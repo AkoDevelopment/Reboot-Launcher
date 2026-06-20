@@ -212,6 +212,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playName => 'Play';
 
   @override
+  String get matchesName => 'Matches';
+
+  @override
+  String get matchesFilterAll => 'All Matches';
+
+  @override
+  String get matchesNoneTitle => 'No active matches';
+
+  @override
+  String get matchesNoneSubtitle =>
+      'Matches will appear here once a server is started';
+
+  @override
+  String matchesPlayerCount(Object current, Object max) {
+    return '$current/$max players';
+  }
+
+  @override
+  String matchesAliveCount(Object count) {
+    return 'Alive: $count';
+  }
+
+  @override
+  String get matchesServerId => 'Server ID';
+
+  @override
+  String get matchesRegion => 'Region';
+
+  @override
+  String get matchesUptime => 'Uptime';
+
+  @override
   String get playGameServerName => 'Multiplayer';
 
   @override

@@ -60,6 +60,26 @@
   "matchmakerConfigurationAddressName": "Game server address",
   "matchmakerConfigurationAddressDescription": "The address of the game server used by the backend",
   "playName": "Play",
+  "matchesName": "Matches",
+  "matchesFilterAll": "All Matches",
+  "matchesNoneTitle": "No active matches",
+  "matchesNoneSubtitle": "Matches will appear here once a server is started",
+  "matchesPlayerCount": "{current}/{max} players",
+  "@matchesPlayerCount": {
+    "placeholders": {
+      "current": {},
+      "max": {}
+    }
+  },
+  "matchesAliveCount": "Alive: {count}",
+  "@matchesAliveCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "matchesServerId": "Server ID",
+  "matchesRegion": "Region",
+  "matchesUptime": "Uptime",
   "playGameServerName": "Multiplayer",
   "playGameServerDescription": "See all the available options to start playing",
   "playGameServerContentLocal": "Your server",

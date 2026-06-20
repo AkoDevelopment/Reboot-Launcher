@@ -10,6 +10,7 @@ import 'package:reboot_launcher/src/page/browser_page.dart';
 import 'package:reboot_launcher/src/page/home_page.dart';
 import 'package:reboot_launcher/src/page/host_page.dart';
 import 'package:reboot_launcher/src/page/info_page.dart';
+import 'package:reboot_launcher/src/page/matches_page.dart';
 import 'package:reboot_launcher/src/pager/abstract_page.dart';
 import 'package:reboot_launcher/src/page/play_page.dart';
 import 'package:reboot_launcher/src/page/settings_page.dart';
@@ -21,6 +22,7 @@ bool hitBack = false;
 final List<AbstractPage> pages = [
   const HomePage(),
   const PlayPage(),
+  const MatchesPage(),
   const HostPage(),
   const BrowsePage(),
   const BackendPage(),

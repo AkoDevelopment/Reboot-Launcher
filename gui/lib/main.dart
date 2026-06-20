@@ -14,6 +14,7 @@ import 'package:reboot_launcher/src/controller/backend_controller.dart';
 import 'package:reboot_launcher/src/controller/dll_controller.dart';
 import 'package:reboot_launcher/src/controller/game_controller.dart';
 import 'package:reboot_launcher/src/controller/hosting_controller.dart';
+import 'package:reboot_launcher/src/controller/matches_controller.dart';
 import 'package:reboot_launcher/src/controller/server_browser_controller.dart';
 import 'package:reboot_launcher/src/controller/settings_controller.dart';
 import 'package:reboot_launcher/src/message/error.dart';
@@ -113,6 +114,10 @@ Future<void> _startApp() async {
     await runCatching(
         callable: () => Get.put(BackendController(), permanent: true),
         errorFormatter: (error) => "Cannot create backend controller: $error"
+    );
+    await runCatching(
+        callable: () => Get.put(MatchesController(), permanent: true),
+        errorFormatter: (error) => "Cannot create matches controller: $error"
     );
     await runCatching(
         callable: () => Get.put(AuthController(), permanent: true),

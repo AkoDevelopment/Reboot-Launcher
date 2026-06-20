@@ -460,6 +460,60 @@ abstract class AppLocalizations {
   /// **'Play'**
   String get playName;
 
+  /// No description provided for @matchesName.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches'**
+  String get matchesName;
+
+  /// No description provided for @matchesFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All Matches'**
+  String get matchesFilterAll;
+
+  /// No description provided for @matchesNoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No active matches'**
+  String get matchesNoneTitle;
+
+  /// No description provided for @matchesNoneSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches will appear here once a server is started'**
+  String get matchesNoneSubtitle;
+
+  /// No description provided for @matchesPlayerCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{max} players'**
+  String matchesPlayerCount(Object current, Object max);
+
+  /// No description provided for @matchesAliveCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Alive: {count}'**
+  String matchesAliveCount(Object count);
+
+  /// No description provided for @matchesServerId.
+  ///
+  /// In en, this message translates to:
+  /// **'Server ID'**
+  String get matchesServerId;
+
+  /// No description provided for @matchesRegion.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get matchesRegion;
+
+  /// No description provided for @matchesUptime.
+  ///
+  /// In en, this message translates to:
+  /// **'Uptime'**
+  String get matchesUptime;
+
   /// No description provided for @playGameServerName.
   ///
   /// In en, this message translates to:

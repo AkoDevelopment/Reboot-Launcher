@@ -1,6 +1,7 @@
 enum PageType {
   home,
   play,
+  matches,
   host,
   browser,
   backend,
