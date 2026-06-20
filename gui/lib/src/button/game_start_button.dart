@@ -463,7 +463,10 @@ class LaunchButtonState extends State<LaunchButton> {
         await _injectOrShowError(GameDll.memoryLeak, host);
       }
       if(!host){
-        await _injectOrShowError(GameDll.console, host);
+        // console.dll (the dev console) is intentionally no longer injected --
+        // it also bundles an in-game cheat menu (F2) that players shouldn't
+        // have access to, plus its own redundant Edit on Release on F3 that
+        // fought with the one below.
         // Client-only gameplay QoL hook (Edit/Reset on Release) -- hosts run
         // a dedicated server process, not a player session, so it has no
         // edit/build UI to hook.
