@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import 'package:reboot_launcher/src/controller/auth_controller.dart';
 import 'package:reboot_launcher/src/controller/backend_controller.dart';
 import 'package:reboot_launcher/src/controller/game_controller.dart';
 import 'package:reboot_launcher/src/controller/hosting_controller.dart';
+import 'package:reboot_launcher/src/controller/matches_controller.dart';
 import 'package:reboot_launcher/src/controller/server_browser_controller.dart';
 import 'package:reboot_launcher/src/message/login.dart';
 import 'package:reboot_launcher/src/messenger/dialog.dart';
@@ -42,6 +44,7 @@ class _WebAppShellState extends State<WebAppShell> {
   final HostingController _hostingController = Get.find<HostingController>();
   final ServerBrowserController _serverBrowserController = Get.find<ServerBrowserController>();
   final AuthController _authController = Get.find<AuthController>();
+  final MatchesController _matchesController = Get.find<MatchesController>();
 
   StreamSubscription? _webMessageSubscription;
   Timer? _pushStateTimer;
@@ -73,7 +76,11 @@ class _WebAppShellState extends State<WebAppShell> {
 
     _webMessageSubscription = _controller.webMessage.listen(_onWebMessage);
     _pushState();
-    _pushStateTimer = Timer.periodic(const Duration(seconds: 1), (_) => _pushState());
+    _pushMatches();
+    _pushStateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _pushState();
+      _pushMatches();
+    });
 
     if (!mounted) return;
     setState(() => _ready = true);
@@ -218,6 +225,27 @@ class _WebAppShellState extends State<WebAppShell> {
   }
 
   String jsonEncode(Object? value) => value == null ? "null" : '"${value.toString().replaceAll('"', '\\"')}"';
+
+  // Pushes whatever the backend's /api/matches already computed into the
+  // webview -- script.js's window.renderMatches just renders it, no status
+  // logic lives in JS or here.
+  void _pushMatches() {
+    final matches = _matchesController.matches.value;
+    final payload = matches.map((match) => {
+      "serverId": match.serverId,
+      "playlist": match.playlist,
+      "displayName": match.displayName,
+      "region": match.region,
+      "status": match.status,
+      "joinable": match.joinable,
+      "playerCount": match.playerCount,
+      "maxPlayers": match.maxPlayers,
+      "aliveCount": match.aliveCount,
+      "uptimeSeconds": match.uptimeSeconds
+    }).toList();
+
+    _controller.executeScript("window.renderMatches && window.renderMatches(${convert.jsonEncode(payload)});");
+  }
 
   @override
   void dispose() {

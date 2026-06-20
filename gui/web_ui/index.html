@@ -24,6 +24,9 @@
     <button class="nav-icon active" data-tooltip="Play" data-page="play">
       <svg viewBox="0 0 24 24"><path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
     </button>
+    <button class="nav-icon" data-tooltip="Matches" data-page="matches">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 4h16v4H4V4zm0 6h16v4H4v-4zm0 6h16v4H4v-4z"/></svg>
+    </button>
     <button class="nav-icon" data-tooltip="Info" data-page="info">
       <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
     </button>
@@ -107,6 +110,22 @@
           </article>
         </div>
       </section>
+    </section>
+
+    <section class="page" id="page-matches" hidden>
+      <h1 class="page-title">Matches</h1>
+      <p class="page-subtitle">Live view of every match the backend is currently tracking.</p>
+
+      <div class="match-filters" id="match-filters">
+        <button class="filter-chip active" data-filter="__all__">All Matches</button>
+      </div>
+
+      <div class="match-list" id="match-list"></div>
+
+      <div class="match-empty" id="match-empty" hidden>
+        <span class="match-empty-title">No active matches</span>
+        <span class="match-empty-subtitle">Matches will appear here once a server is started</span>
+      </div>
     </section>
 
     <section class="page" id="page-info" hidden>
