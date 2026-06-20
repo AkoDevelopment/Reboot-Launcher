@@ -14,7 +14,10 @@ permissions:
 
 jobs:
   build-and-release:
-    runs-on: windows-latest
+    # windows-latest now ships a newer MSVC that hard-errors on a deprecated
+    # coroutine header used by the webview_windows plugin (not our code) --
+    # windows-2022 has an older toolset that only warns, matching local builds.
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
 
