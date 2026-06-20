@@ -17,6 +17,7 @@ import 'package:reboot_launcher/src/controller/server_browser_controller.dart';
 import 'package:reboot_launcher/src/message/backend.dart';
 import 'package:reboot_launcher/src/util/matchmaker.dart';
 import 'package:reboot_launcher/src/util/translations.dart';
+import 'package:reboot_launcher/src/util/updater.dart';
 import 'package:reboot_launcher/src/messenger/dialog.dart';
 import 'package:reboot_launcher/src/messenger/info_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -80,6 +81,16 @@ class LaunchButtonState extends State<LaunchButton> {
       _onStop(
           reason: _StopReason.normal,
           host: host
+      );
+      return;
+    }
+
+    if (pendingLauncherUpdate.value != null) {
+      log("[${host ? 'HOST' : 'GAME'}] Blocked launch, an update is required");
+      showRebootInfoBar(
+          "An update is available and must be installed before launching Fortnite.",
+          severity: InfoBarSeverity.warning,
+          duration: infoBarLongDuration
       );
       return;
     }

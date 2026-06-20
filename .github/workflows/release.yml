@@ -1,0 +1,51 @@
+name: Release
+
+# Tag a commit with a version (e.g. "git tag v1.0.1 && git push origin v1.0.1")
+# to trigger this. The pubspec.yaml version should match the tag (without the
+# leading "v") before tagging, since that's what gets baked into the build and
+# what the in-app updater (lib/src/util/updater.dart) compares against.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.19.6"
+          channel: "stable"
+
+      - name: Install dependencies
+        working-directory: gui
+        run: flutter pub get
+
+      - name: Build Windows installer
+        working-directory: gui
+        run: |
+          dart pub global activate flutter_distributor
+          dart pub global run flutter_distributor package --platform windows --targets exe
+
+      - name: Locate installer
+        id: installer
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem -Path gui/dist -Recurse -Filter *.exe | Select-Object -First 1
+          if (-not $installer) {
+            Write-Error "No installer .exe found under gui/dist"
+            exit 1
+          }
+          echo "path=$($installer.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.installer.outputs.path }}
+          generate_release_notes: true

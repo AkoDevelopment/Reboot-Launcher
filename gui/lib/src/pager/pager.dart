@@ -15,6 +15,7 @@ import 'package:reboot_launcher/src/controller/settings_controller.dart';
 import 'package:reboot_launcher/src/util/matchmaker.dart';
 import 'package:reboot_launcher/src/util/os.dart';
 import 'package:reboot_launcher/src/util/translations.dart';
+import 'package:reboot_launcher/src/util/updater.dart';
 import 'package:reboot_launcher/src/messenger/dialog.dart';
 import 'package:reboot_launcher/src/messenger/info_bar.dart';
 import 'package:reboot_launcher/src/messenger/overlay.dart';
@@ -97,14 +98,44 @@ class _RebootPagerState extends State<RebootPager> with WindowListener, Automati
     }
   }
 
-  void _checkUpdates() {
-    // Project Ocean: this isn't a published fork with its own release feed,
-    // so there's nothing meaningful to check against upstream's versioning.
+  Future<void> _checkUpdates() async {
     if(!dllsDirectory.existsSync()) {
       dllsDirectory.createSync(recursive: true);
     }
 
     _dllController.downloadAndGuardDependencies();
+
+    final update = await checkLauncherUpdate();
+    if (update != null && mounted) {
+      _showUpdateDialog(update);
+    }
+  }
+
+  Future<void> _showUpdateDialog(LauncherUpdate update) => showRebootDialog(
+      dismissWithEsc: false,
+      builder: (context) => InfoDialog.ofOnly(
+          text: "A new version (${update.version}) of Project Ocean is available. "
+              "You'll need to update before you can launch Fortnite.",
+          button: DialogButton(
+              type: ButtonType.primary,
+              text: "Update now",
+              onTap: () => _startUpdate(update)
+          )
+      )
+  );
+
+  void _startUpdate(LauncherUpdate update) {
+    Navigator.of(appNavigatorKey.currentContext!).pop();
+    showRebootDialog(
+        dismissWithEsc: false,
+        builder: (context) => FutureBuilderDialog(
+            future: downloadAndRunUpdate(update),
+            loadingMessage: "Downloading update...",
+            successfulBody: FutureBuilderDialog.ofMessage("Update downloaded."),
+            unsuccessfulBody: FutureBuilderDialog.ofMessage("Failed to download the update. Try again later."),
+            errorMessageBuilder: (error) => "Failed to download the update: $error"
+        )
+    );
   }
 
   @override
