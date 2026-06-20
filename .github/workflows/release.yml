@@ -36,7 +36,7 @@ jobs:
           dart pub global activate flutter_distributor
           dart pub global run flutter_distributor:main package --platform windows --targets exe
 
-      - name: Locate installer
+      - name: Locate and rename installer
         id: installer
         shell: pwsh
         run: |
@@ -45,7 +45,12 @@ jobs:
             Write-Error "No installer .exe found under gui/dist"
             exit 1
           }
-          echo "path=$($installer.FullName)" >> $env:GITHUB_OUTPUT
+          # flutter_distributor names the file after the Dart package (reboot_launcher),
+          # not the app's actual display name -- rename just the output file to match.
+          $newName = "ProjectOcean-${{ github.ref_name }}-windows-setup.exe"
+          $newPath = Join-Path $installer.DirectoryName $newName
+          Rename-Item -Path $installer.FullName -NewName $newName
+          echo "path=$newPath" >> $env:GITHUB_OUTPUT
 
       - name: Create release
         uses: softprops/action-gh-release@v2
