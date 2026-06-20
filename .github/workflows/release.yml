@@ -31,7 +31,7 @@ jobs:
         working-directory: gui
         run: |
           dart pub global activate flutter_distributor
-          dart pub global run flutter_distributor package --platform windows --targets exe
+          dart pub global run flutter_distributor:main package --platform windows --targets exe
 
       - name: Locate installer
         id: installer
