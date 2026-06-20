@@ -24,6 +24,7 @@ class DllController extends GetxController {
   late final TextEditingController unrealEngineConsoleDll;
   late final TextEditingController backendDll;
   late final TextEditingController memoryLeakDll;
+  late final TextEditingController editOnReleaseDll;
   late final TextEditingController gameServerPort;
   late final TextEditingController beforeS20Mirror;
   late final TextEditingController aboveS20Mirror;
@@ -38,6 +39,7 @@ class DllController extends GetxController {
     unrealEngineConsoleDll = _createController("unreal_engine_console", GameDll.console);
     backendDll = _createController("backend", GameDll.auth);
     memoryLeakDll = _createController("memory_leak", GameDll.memoryLeak);
+    editOnReleaseDll = _createController("edit_on_release", GameDll.editOnRelease);
     gameServerPort = TextEditingController(text: _storage?.read("game_server_port") ?? kDefaultGameServerPort);
     gameServerPort.addListener(() => _storage?.write("game_server_port", gameServerPort.text));
     beforeS20Mirror = TextEditingController(text: _storage?.read("before_s20_update_url") ?? kRebootBelowS20DownloadUrl);
@@ -177,6 +179,9 @@ class DllController extends GetxController {
       case GameDll.memoryLeak:
         final memoryFile = File(memoryLeakDll.text);
         return (memoryFile, canonicalize(memoryFile.path) != defaultPath);
+      case GameDll.editOnRelease:
+        final editOnReleaseFile = File(editOnReleaseDll.text);
+        return (editOnReleaseFile, canonicalize(editOnReleaseFile.path) != defaultPath);
     }
   }
 
@@ -198,6 +203,8 @@ class DllController extends GetxController {
         return customGameServerDll;
       case GameDll.memoryLeak:
         return memoryLeakDll;
+      case GameDll.editOnRelease:
+        return editOnReleaseDll;
     }
   }
 
@@ -211,6 +218,8 @@ class DllController extends GetxController {
         return "${dllsDirectory.path}\\reboot.dll";
       case GameDll.memoryLeak:
         return "${dllsDirectory.path}\\memory.dll";
+      case GameDll.editOnRelease:
+        return "${dllsDirectory.path}\\editonrelease.dll";
     }
   }
 
@@ -352,6 +361,10 @@ class DllController extends GetxController {
         break;
       case GameDll.memoryLeak:
         settingsMemoryDllInputKey.currentState?.validate();
+        break;
+      case GameDll.editOnRelease:
+        // No Settings field exposes this path -- it's always the default,
+        // there's nothing to re-validate.
         break;
     }
   }

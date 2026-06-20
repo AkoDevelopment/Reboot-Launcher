@@ -2,7 +2,8 @@ enum GameDll {
   console,
   auth,
   gameServer,
-  memoryLeak
+  memoryLeak,
+  editOnRelease
 }
 
 extension InjectableDllVersionAware on GameDll {

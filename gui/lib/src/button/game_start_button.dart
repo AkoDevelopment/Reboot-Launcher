@@ -464,6 +464,10 @@ class LaunchButtonState extends State<LaunchButton> {
       }
       if(!host){
         await _injectOrShowError(GameDll.console, host);
+        // Client-only gameplay QoL hook (Edit/Reset on Release) -- hosts run
+        // a dedicated server process, not a player session, so it has no
+        // edit/build UI to hook.
+        await _injectOrShowError(GameDll.editOnRelease, host);
         _onGameClientInjected();
       }else {
         final gameServerPort = int.tryParse(_dllController.gameServerPort.text);

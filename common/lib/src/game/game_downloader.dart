@@ -494,6 +494,8 @@ Future<bool> downloadDependency(GameDll dll, String outputPath) async {
           name = "sinum.dll";
       case GameDll.memoryLeak:
         name = "memory.dll";
+        case GameDll.editOnRelease:
+         name = "editonrelease.dll";
         case GameDll.gameServer:
          name = null;
     }
@@ -501,7 +503,11 @@ Future<bool> downloadDependency(GameDll dll, String outputPath) async {
         return false;
     }
 
-    final response = await http.get(Uri.parse("https://github.com/Auties00/reboot_launcher/raw/master/gui/dependencies/dlls/$name"));
+    // editonrelease.dll isn't part of the upstream project -- it's our own
+    // fork of ramok0/FortniteEditOnRelease, built via that repo's own CI and
+    // committed here, so it has to be fetched from our repo instead.
+    final repo = dll == GameDll.editOnRelease ? "AkoDevelopment/Reboot-Launcher" : "Auties00/reboot_launcher";
+    final response = await http.get(Uri.parse("https://github.com/$repo/raw/master/gui/dependencies/dlls/$name"));
     if(response.statusCode != 200) {
         throw Exception("Cannot download $name: status code ${response.statusCode}");
     }
