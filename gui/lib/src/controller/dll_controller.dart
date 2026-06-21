@@ -232,9 +232,13 @@ class DllController extends GetxController {
       }
 
       if(!force && File(filePath).existsSync()) {
-        log("[DLL] $dll already exists");
-        _listenToFileEvents(dll);
-        return true;
+        if (await isDependencyStale(dll, filePath)) {
+          log("[DLL] $dll exists but is outdated, redownloading");
+        } else {
+          log("[DLL] $dll already exists");
+          _listenToFileEvents(dll);
+          return true;
+        }
       }
 
       log("[DLL] Downloading $dll...");

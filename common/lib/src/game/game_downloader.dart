@@ -485,31 +485,71 @@ Future<bool> hasRebootDllUpdate(int? lastUpdateMs, {int hours = 24, bool force =
     return force || !exists || (hours > 0 && lastUpdate != null && now.difference(lastUpdate).inHours > hours);
 }
 
-Future<bool> downloadDependency(GameDll dll, String outputPath) async {
-    String? name;
+String? _dependencyFileName(GameDll dll) {
     switch(dll) {
       case GameDll.console:
-        name = "console.dll";
+        return "console.dll";
       case GameDll.auth:
-          name = "sinum.dll";
+        return "sinum.dll";
       case GameDll.memoryLeak:
-        name = "memory.dll";
-        case GameDll.editOnRelease:
-         name = "editonrelease.dll";
-        case GameDll.gameServer:
-         name = null;
+        return "memory.dll";
+      case GameDll.editOnRelease:
+        return "editonrelease.dll";
+      case GameDll.gameServer:
+        return null;
     }
-    if(name == null) {
+}
+
+// editonrelease.dll isn't part of the upstream project -- it's our own fork of
+// ramok0/FortniteEditOnRelease, built via that repo's own CI and committed here,
+// so it has to be fetched from our repo instead.
+String _dependencyRepo(GameDll dll) =>
+    dll == GameDll.editOnRelease ? "AkoDevelopment/Reboot-Launcher" : "Auties00/reboot_launcher";
+
+Uri? _dependencyUri(GameDll dll) {
+    final name = _dependencyFileName(dll);
+    if (name == null) return null;
+    return Uri.parse("https://github.com/${_dependencyRepo(dll)}/raw/master/gui/dependencies/dlls/$name");
+}
+
+// A locally cached dependency DLL never gets re-fetched once it exists on disk,
+// so fixes to one of these files (e.g. editonrelease.dll losing its debug
+// console window) would otherwise never reach anyone who already downloaded the
+// old copy, no matter how many times they update the launcher itself. Comparing
+// against the remote's Content-Length is enough to detect a changed file without
+// downloading it twice, and costs nothing when nothing changed.
+Future<bool> isDependencyStale(GameDll dll, String localPath) async {
+    final uri = _dependencyUri(dll);
+    if (uri == null) return false;
+
+    final localFile = File(localPath);
+    if (!await localFile.exists()) return false;
+
+    try {
+        final response = await http.head(uri);
+        if (response.statusCode != 200) return false;
+
+        final remoteLength = int.tryParse(response.headers["content-length"] ?? "");
+        if (remoteLength == null) return false;
+
+        final localLength = await localFile.length();
+        return localLength != remoteLength;
+    } catch (_) {
+        // Offline or GitHub unreachable -- keep using whatever's cached rather
+        // than blocking on a network check that can't succeed right now.
+        return false;
+    }
+}
+
+Future<bool> downloadDependency(GameDll dll, String outputPath) async {
+    final uri = _dependencyUri(dll);
+    if (uri == null) {
         return false;
     }
 
-    // editonrelease.dll isn't part of the upstream project -- it's our own
-    // fork of ramok0/FortniteEditOnRelease, built via that repo's own CI and
-    // committed here, so it has to be fetched from our repo instead.
-    final repo = dll == GameDll.editOnRelease ? "AkoDevelopment/Reboot-Launcher" : "Auties00/reboot_launcher";
-    final response = await http.get(Uri.parse("https://github.com/$repo/raw/master/gui/dependencies/dlls/$name"));
+    final response = await http.get(uri);
     if(response.statusCode != 200) {
-        throw Exception("Cannot download $name: status code ${response.statusCode}");
+        throw Exception("Cannot download ${_dependencyFileName(dll)}: status code ${response.statusCode}");
     }
 
     final output = File(outputPath);
