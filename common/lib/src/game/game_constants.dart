@@ -17,9 +17,7 @@ const List<String> kCorruptedBuildErrors = [
   "LogWindows:Error: Fatal error!"
 ];
 const List<String> kCannotConnectErrors = [
-  "port 3551 failed: Connection refused",
   "Unable to login to Fortnite servers",
-  "HTTP 400 response from ",
   "Network failure when attempting to check platform restrictions",
   "UOnlineAccountCommon::ForceLogout"
 ];
